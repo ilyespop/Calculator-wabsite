@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الآلة الحاسبة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b0b0b0;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 90%;
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .calculator {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-container">
+        <h2>تسجيل الدخول / إنشاء حساب</h2>
+        <input type="text" id="username" placeholder="اسم المستخدم" required>
+        <input type="password" id="password" placeholder="كلمة المرور" required>
+        <button onclick="register()">إنشاء حساب</button>
+        <button onclick="login()">تسجيل الدخول</button>
+    </div><div class="container calculator" id="calculator-container">
+    <h2>مرحبًا <span id="user-name"></span></h2>
+    <input type="text" id="calc-display" disabled>
+    <div>
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('+')">+</button>
+    </div>
+    <div>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('-')">-</button>
+    </div>
+    <div>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('*')">*</button>
+    </div>
+    <div>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button onclick="appendToDisplay('0')">0</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="appendToDisplay('/')">/</button>
+    </div>
+    <button onclick="logout()">تسجيل الخروج</button>
+</div>
+
+<script>
+    function register() {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        if (username && password) {
+            localStorage.setItem(username, password);
+            alert("تم إنشاء الحساب بنجاح!");
+        } else {
+            alert("الرجاء إدخال اسم المستخدم وكلمة المرور");
+        }
+    }
+
+    function login() {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        if (localStorage.getItem(username) === password) {
+            sessionStorage.setItem("loggedUser", username);
+            showCalculator(username);
+        } else {
+            alert("اسم المستخدم أو كلمة المرور غير صحيحة");
+        }
+    }
+
+    function showCalculator(username) {
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("calculator-container").style.display = "block";
+        document.getElementById("user-name").innerText = username;
+    }
+
+    function logout() {
+        sessionStorage.removeItem("loggedUser");
+        location.reload();
+    }
+
+    function appendToDisplay(value) {
+        document.getElementById("calc-display").value += value;
+    }
+
+    function clearDisplay() {
+        document.getElementById("calc-display").value = "";
+    }
+
+    function calculate() {
+        try {
+            document.getElementById("calc-display").value = eval(document.getElementById("calc-display").value);
+        } catch {
+            alert("خطأ في المعادلة");
+        }
+    }
+
+    window.onload = function () {
+        let loggedUser = sessionStorage.getItem("loggedUser");
+        if (loggedUser) {
+            showCalculator(loggedUser);
+        }
+    }
+</script>
+
+</body>
+</html>
